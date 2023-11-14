@@ -1,0 +1,12 @@
+.actions {
+    position: relative;
+    top: -45px;
+    margin-bottom: -45px;
+    text-align: right;
+    padding: 5px;
+    font-size: 1.5em
+}
+
+.newLambda {
+    color: red;
+}

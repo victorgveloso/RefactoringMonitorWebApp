@@ -1,0 +1,9 @@
+<div *ngIf="project">
+    <h1>
+        <i class="fa fa-github" aria-hidden="true"></i>
+        <a href="{{ project.getCloneUrl() }}" target="_blank">{{ project.getName() }}</a>
+    </h1>
+    <br />
+    <br />
+    <lambdas-table-component [project]="project"></lambdas-table-component>
+</div>

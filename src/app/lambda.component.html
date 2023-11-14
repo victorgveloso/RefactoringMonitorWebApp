@@ -1,0 +1,130 @@
+<div *ngIf="lambda">
+    <h1>
+        <i class="fa fa-github" aria-hidden="true"></i>
+        <a href="{{ project.getCloneUrl() }}" target="_blank">{{ project.getName() }}</a>
+    </h1>
+    <p>
+        <a href="{{ lambda.getCommitDiffLink() }}" target="_blank">{{ commit.getSHA1() }}</a> |
+        <i class="fa fa-calendar" aria-hidden="true"></i> {{ commit.getDate() }} |
+        <i class="fa fa-user" aria-hidden="true"></i> {{ commit.getAuthor() }}
+    </p>
+    <p *ngIf="lambda.status">
+        <i class="fa fa-tasks" aria-hidden="true"></i> Status: {{ lambda.status }}
+        <button type="button" class="btn btn-default btn-sm" (click)="skipLambda()" *ngIf="lambda.status == 'NEW'" aria-label="Skip Lambda Expression">
+            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm" (click)="unskipLambda()" *ngIf="lambda.status != 'NEW'" aria-label="Unskip Lambda Expression">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+        </button>
+    </p>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-file-code-o" aria-hidden="true"></i> <a href="{{ lambda.getLambdaLink() }}" target="_blank">{{ lambda.getFile() }}</a>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <lambda-code [lambda]="lambda"></lambda-code>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-tags" aria-hidden="true"></i> Associated Tags
+            </h3>
+        </div>
+        <div class="panel-body">
+            <rl-tag-input [addOnBlur]="false" [autocomplete]="true" [autocompleteItems]="autocompleteItems" [autocompleteMustMatch]="false"
+                [(ngModel)]="tags" placeholder="Enter tags" (addTag)="tagAdded($event)" (removeTag)="tagRemoved($event)">
+            </rl-tag-input>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-comments-o" aria-hidden="true"></i>
+                Communication with {{ commit.getAuthor() }}
+                &lt;{{ commit.getAuthorEmail().replace("@", " under the domain ") }}&gt;
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="media" *ngFor="let email of emails">
+                <hr />
+                <div class="media-left">
+                    <a *ngIf="email.getRecipientIsUser()"
+                        href="mailto://{{ lambda.getCommit().getAuthorEmail() }}"><i class="fa fa-user" aria-hidden="true"></i></a>
+                    <i *ngIf="!email.getRecipientIsUser()" class="fa fa-user-secret" aria-hidden="true"></i>
+                </div>
+                <div class="media-body">
+                    <div class="media-heading">
+                        <p>From: <b>{{ email.getSender() }}</b></p>
+                        <p>To: <b>{{ email.getRecipient() }}</b></p>
+                        <p>Subject: <b>{{ email.getSubject() }}</b></p>
+                        <p>Date: <b>{{ email.getDate() }}</b></p>
+                    </div>
+                    <div class="well" [innerHTML]="email.getBody()"></div>
+                    <div class="btn-group" role="group" aria-label="..." *ngIf="email.getRecipientIsUser()">
+                        <button type="button" class="btn btn-default btn-success" (click)="initiateReplyEmail(email)">
+                            <i class="fa fa-reply" aria-hidden="true"></i> Reply
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div *ngIf="messageStatus" class="alert {{ messageStatus.class }} alert-dismissible" role="alert">
+                <button (click)="messageStatus = undefined" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ messageStatus.message }}
+            </div>
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" (click)="initiateTemplateEmail()" aria-label="Email the author">
+                    <i class="fa fa-envelope" aria-hidden="true"></i> Email {{ commit.getAuthor() }} (template)
+                </button>
+                <button type="button" class="btn btn-default" (click)="initiateBlankEmail()" aria-label="Initiate email with author">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i> Email {{ commit.getAuthor() }}
+                </button>
+                <button type="button" class="btn btn-default" (click)="initiateAddResponse()" aria-label="Add response">
+                    <i class="fa fa-reply" aria-hidden="true"></i> Add author's response
+                </button>
+            </div>
+            <hr />
+            <div *ngIf="emailBlockMode != emailBlockModeEnum.None">
+                <form class="well">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">Subject: </span>
+                            <input type="text" class="form-control" name="subject" id="subject" required [(ngModel)]="emailSubject" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">Message: </span>
+                            <div>
+                                <simple-tiny [elementId]="'emailTextArea'" [contents]="emailBody" (onEditorKeyup)="keyupHandlerFunction($event)"></simple-tiny>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="emailBlockMode != emailBlockModeEnum.None && emailBlockMode != emailBlockModeEnum.AddResponse">
+                        <div class="form-check">
+                            <label for="emailMyself">
+                                <input style="vertical-align: top" type="checkbox" class="btn" aria-label="..." id="emailMyself" name="emailMyself"  [(ngModel)]="emailMyself" />
+                                Send a copy to {{ backendService.getUser().getEmail() }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button type="submit" class="btn btn-default btn-success" (click)="action()"><i class="fa fa-paper-plane" aria-hidden="true"></i> OK</button>
+                            <button type="button" class="btn btn-default btn-danger" (click)="hideEmailBlock()"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--i class="fa fa-reply-all" aria-hidden="true"></i> Replies -->
+        </div>
+    </div>
+
+
+
+</div>

@@ -1,0 +1,49 @@
+<div class="loading" *ngIf="!lambdasFiltered"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</div> 
+<div class="table-responsive" *ngIf="lambdasFiltered">
+    <div class="form-group">
+        <div class="form-check">
+            <label for="onlyNewLabel">
+                <input style="vertical-align: top" type="checkbox" class="btn" aria-label="..." id="onlyNewLabel" 
+                    name="onlyNewLabel" #onlyNewLabel (change)="changeShowOnlyNewLambdas(onlyNewLabel.checked)" />
+                Show only new lambdas
+            </label>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th (click)="paginator.setSortBy('commit.id')">Commit</th>
+                <th (click)="paginator.setSortBy('commit.date')">Date</th>
+                <th (click)="paginator.setSortBy('commit.author')">Author</th>
+                <th (click)="paginator.setSortBy('status')">Status</th>
+                <th (click)="paginator.setSortBy('locationStatus')">Location</th>
+                <th>Lambda</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let lambda of lambdasFiltered">
+                <td><a href="{{ lambda.getCommitDiffLink() }}" target="_blank">{{ lambda.getCommit().getSHA1().substring(0, 7) }}</a></td>
+                <td>{{ lambda.getCommit().getDate() | date:'medium' }}</td>
+                <td>
+                    {{ lambda.getCommit().getAuthor() }}
+                    <sup *ngIf="backendService.getUser() && lambda.authorContacted"><i class="fa fa-envelope" aria-hidden="true" title="The developer has already been contacted"></i></sup>
+                </td>
+                <td [class.newLambda]="lambda.status === 'NEW'">{{ getPrettyStatus(lambda.status) }}</td>
+                <td>{{ getPrettyStatus(lambda.getLocationStatus()) }}</td>
+                <td>
+                    <lambda-code [lambda]="lambda"></lambda-code>
+                    <div class="actions">
+                        <a href="{{ lambda.getLambdaLink() }}" target="_blank"><i class="fa fa-github" aria-hidden="true" title="See on GitHub"></i></a>
+                        <a href="javascript:void(0)" (click)="skipLambda(lambda, true)" *ngIf="backendService.getUser() && lambda.status == 'NEW'" aria-label="Skip Lambda Expression"><i
+                             class="fa fa-eye-slash" aria-hidden="true" title="Skip Lambda Expression"></i></a>
+                        <a (click)="skipLambda(lambda, false)" href="javascript:void(0)" *ngIf="backendService.getUser() && lambda.status == 'SKIPPED'" aria-label="Unskip Lambda Expression"><i
+                            class="fa fa-eye" aria-hidden="true" title="Unskip Lambda Expression"></i></a>
+                        <a *ngIf="backendService.getUser()" [routerLink]="['/lambda', lambda.getCommit().getProject().getID(), lambda.id]" 
+                            routerLinkActive="active" title="Actions"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot paginator [paginator]="paginator" [colspan]="6"></tfoot>
+    </table>
+</div>

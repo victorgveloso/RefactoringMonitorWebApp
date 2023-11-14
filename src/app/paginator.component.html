@@ -1,0 +1,9 @@
+<tr *ngIf="paginator.getPages() && paginator.getPages().length > 1">
+    <td [attr.colspan]="colspan">
+        <ul class="pagination">
+            <li *ngFor="let page of paginator.getPages()" [class.active]="page == paginator.getCurrentPage()">
+                <a (click)="paginator.setCurrentPage(page)">{{ page }}</a>
+            </li>
+        </ul>
+    </td>
+</tr>

@@ -1,0 +1,34 @@
+<div class="loading" *ngIf="!projectsFiltered"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</div>
+<div class="table-responsive" *ngIf="projectsFiltered">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th (click)="setSort('id')">ID</th>
+                <th>Repository</th>
+                <th (click)="setSort('status')">Status</th>
+                <th (click)="setSort('shouldMonitor')">Monitor</th>
+                <th (click)="setSort('lastAnalyzed')">Last Analyzed</th>                
+                <th (click)="setSort('numberOfLambdas')">#Lambdas</th>
+                <th (click)="setSort('numberOfNewLambdas')">#New Lambdas</th>
+                <th>Lambdas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let p of projectsFiltered">
+                <td>{{ p.id }}</td>
+                <td><a href="{{ p.cloneUrl }}" target="_blank" title="{{ p.branch }}">{{ p.getName() }}</a></td>
+                <td>{{ p.status }}</td>
+                <td>
+                    <input type="checkbox" *ngIf="backEndService.getUser() && backEndService.getUser().isAdmin()" 
+                        (change)="changeMonitor(p.id, $event)" checked="{{ p.shouldMonitor ? 'checked' : '' }}" />
+                    <i *ngIf="!(backEndService.getUser() && backEndService.getUser().isAdmin()) && p.shouldMonitor"  class="fa fa-check" aria-hidden="true"></i>
+                </td>
+                <td>{{ p.lastAnalyzed | date:'medium' }}</td>
+                <td>{{ p.numberOfLambdas }}</td>               
+                <td>{{ p.numberOfNewLambdas }}</td>
+                <td><a [routerLink]="['/project-details', p.id]" routerLinkActive="active">Details</a></td>
+            </tr>
+        </tbody>
+        <tfoot paginator [paginator]="paginator" [colspan]="8"></tfoot>
+    </table>
+</div>
