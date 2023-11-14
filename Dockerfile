@@ -8,9 +8,11 @@ RUN mkdir -p /home/angular/project
 
 WORKDIR /home/angular/project
 
-COPY . /home/angular/project
+COPY tslint.json tsconfig.json protractor.conf.js package.json karma.conf.js angular-cli.json /home/angular/project/
 
 RUN npm install --production
+
+COPY src e2e .gitignore .editorconfig Dockerfile README.md /home/angular/project/
 
 ENTRYPOINT ["npm","start"]
 
