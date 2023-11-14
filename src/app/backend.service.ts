@@ -13,7 +13,7 @@ import 'rxjs/Rx';
 @Injectable()
 export class BackEndService {
 
-  private readonly BACKEND_SERVER: string = "http://refactoring.encs.concordia.ca/api.php";
+  private readonly BACKEND_SERVER: string = "http://php/api.php";
   //private readonly BACKEND_SERVER: string = "http://localhost/RefactoringMinerBackEnd/api.php";
 
   constructor(private http: Http, private router: Router) { }
