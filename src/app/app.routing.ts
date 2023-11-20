@@ -5,7 +5,7 @@ import { HomeComponent } from './home.component'; //import home components
 import { ProjectDetailsComponent } from './project-details.component'; //import about component
 import { LambdaComponent } from './lambda.component';
 import { EmailsComponent } from './emails.component';
-import { AuthGuard } from './auth.gaurd';
+import { AuthGuard } from './auth.guard';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },

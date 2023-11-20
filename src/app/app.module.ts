@@ -23,7 +23,7 @@ import { LambdaCodeComponent } from './lambda-code.component';
 
 import { SimpleTinyComponent } from './tinymce.component';
 
-import { AuthGuard } from './auth.gaurd';
+import { AuthGuard } from './auth.guard';
 import { BackEndService } from './backend.service';
 
 
