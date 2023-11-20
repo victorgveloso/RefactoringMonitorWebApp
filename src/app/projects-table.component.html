@@ -8,9 +8,9 @@
                 <th (click)="setSort('status')">Status</th>
                 <th (click)="setSort('shouldMonitor')">Monitor</th>
                 <th (click)="setSort('lastAnalyzed')">Last Analyzed</th>                
-                <th (click)="setSort('numberOfLambdas')">#Lambdas</th>
-                <th (click)="setSort('numberOfNewLambdas')">#New Lambdas</th>
-                <th>Lambdas</th>
+                <th (click)="setSort('commits_count')">#Commits</th>
+                <th (click)="setSort('numberOfCommits')">#Test Commits</th>
+                <th>Test Commits</th>
             </tr>
         </thead>
         <tbody>
@@ -24,8 +24,8 @@
                     <i *ngIf="!(backEndService.getUser() && backEndService.getUser().isAdmin()) && p.shouldMonitor"  class="fa fa-check" aria-hidden="true"></i>
                 </td>
                 <td>{{ p.lastAnalyzed | date:'medium' }}</td>
-                <td>{{ p.numberOfLambdas }}</td>               
-                <td>{{ p.numberOfNewLambdas }}</td>
+                <td>{{ p.commits_count }}</td>               
+                <td>{{ p.numberOfCommits }}</td>
                 <td><a [routerLink]="['/project-details', p.id]" routerLinkActive="active">Details</a></td>
             </tr>
         </tbody>

@@ -143,7 +143,7 @@ export class BackEndService {
         private analyzed: boolean, private branch: string, private numberOfNewLambdas: number*/
     return new Project(project["id"], project["name"], project["cloneUrl"], project["status"],
       +project["numberOfLambdas"], new Date(project["last_update"].replace(/-/g, "/")), +project["monitoring_enabled"] == 1,
-      +project["analyzed"] == 1, project["default_branch"], +project["numberOfNewLambdas"]);
+      +project["analyzed"] == 1, project["default_branch"], +project["numberOfNewLambdas"], +project["numberOfCommits"], +project["commits_count"]);
   }
 
   public setProjectMonitoring(projectID: number, shouldMonitor: boolean): Observable<Lambda[]> {
