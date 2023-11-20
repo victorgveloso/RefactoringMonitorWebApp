@@ -25,6 +25,9 @@ import { SimpleTinyComponent } from './tinymce.component';
 
 import { AuthGuard } from './auth.guard';
 import { BackEndService } from './backend.service';
+import { RefactoringsTableComponent } from './refactorings-table.component';
+import { RefactoringComponent } from './refactoring.component';
+import { RefactoringCodeComponent } from './refactoring-code.component';
 
 
 @NgModule({
@@ -36,12 +39,15 @@ import { BackEndService } from './backend.service';
     HomeComponent,
     ProjectDetailsComponent,
     LambdasTableComponent,
+    RefactoringsTableComponent,
     PaginatorComponent,
     LambdaComponent,
+    RefactoringComponent,
     SimpleTinyComponent,
     EmailsComponent,
     EmailsTableComponent,
-    LambdaCodeComponent
+    LambdaCodeComponent,
+    RefactoringCodeComponent
   ],
   imports: [
     BrowserModule,
