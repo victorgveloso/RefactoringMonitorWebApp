@@ -12,8 +12,11 @@ COPY tslint.json tsconfig.json protractor.conf.js package.json karma.conf.js ang
 
 RUN npm install --production
 
-COPY src e2e .gitignore .editorconfig Dockerfile README.md /home/angular/project/
+COPY e2e /home/angular/project/e2e/
 
-ENTRYPOINT ["npm","start"]
+COPY src /home/angular/project/src/
 
-EXPOSE 8000
+ENTRYPOINT ["npm"]
+CMD ["start"]
+
+EXPOSE 4000
