@@ -5,10 +5,12 @@ import { Email } from '../model/email';
 import { LambdaParameter } from '../model/lambda-parameter';
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable'; 
 import { User } from '../model/user';
 import { Router } from '@angular/router';
 import 'rxjs/Rx';
+import { Refactoring } from 'model/refactoring';
+import { RefactoringParameter } from 'model/refactoring-parameter';
 
 @Injectable()
 export class BackEndService {
@@ -55,6 +57,86 @@ export class BackEndService {
       .catch(error => this.handleError(error, url));
   }
 
+  /* TODO: Implement this function */
+  public getRefactoring(refactoringID: number, project: Project): Observable<Refactoring> {
+    let url = this.BACKEND_SERVER + "?refactorings&projectID=" + project.getID() + "&refactoringID=" + refactoringID +
+      this.getJwtUrlComponent();
+    return this.http.get(url)
+      .map(res => {
+        let returnedJson = res.json();
+        let refactorings = this.getRefactoringsFromRow((row) => project, returnedJson, null);
+        return refactorings[0];
+      })
+      .catch(error => this.handleError(error, url));
+  }
+
+  /* TODO: Implement this function */
+  public getRefactoringsFromRow(getProjectFunc, returned, mapExtraInfo): Refactoring[] {
+    let refactorings: Refactoring[] = [];
+    let commits: { [id: number]: Commit; } = {};
+    for (let i = 0; i < returned.length; i++) {
+      let row = returned[i];
+      let commitRowID: number = parseInt(row["commitRowId"]);
+      let commit: Commit = commits[commitRowID];
+      if (typeof commit === "undefined") {
+        commit = new Commit(getProjectFunc(row), commitRowID, row["commitId"], new Date(row["commitTime"].replace(/-/g, "/")), row["authorName"], row["authorEmail"], +row["authorRank"]);
+        commits[commitRowID] = commit;
+      }
+      let parameters: RefactoringParameter[] = [];
+      // let parameterRows = row["parameters"];
+      // for (let j = 0; j < parameterRows.length; j++) {
+      //   parameters.push(new RefactoringParameter(parameterRows[j]["type"], parameterRows[j]["name"]));
+      // }
+
+      let tags = [];
+      let tagRows = row["tags"];
+      if (tagRows) {
+        for (let j = 0; j < tagRows.length; j++) {
+          tags.push(tagRows[j]["label"]);
+        }
+      }
+      let refactoringLocationStatus = row["refactoringLocationStatus"] ? row["refactoringLocationStatus"] : "";
+      let refactoringStatus = row["refactoring_status"] ? row["refactoring_status"] : "";
+      let refactoring = new Refactoring(row["id"], commit, row["filePath"], row["startLine"], row["endLine"], 
+        row["fileMd5"], row["body"], parameters, refactoringStatus, tags, refactoringLocationStatus, row["parent"], row["refactoringString"], row["refactoringType"]);
+      if (mapExtraInfo) {
+        mapExtraInfo(refactoring, row);
+      }
+      refactorings.push(refactoring);
+    }
+    return refactorings;
+  }
+  /* TODO: Implement this function */
+  public getAllRefactoringTags(): Observable<string[]> {
+    let url = this.BACKEND_SERVER + "?allTags" + this.getJwtUrlComponent();
+    return this.http.get(url)
+      .map(res => {
+        let tags: string[] = [];
+        let returned = res.json();
+        for (let obj of returned) {
+          tags.push(obj["label"]);
+        }
+        return tags;
+      })
+      .catch(error => this.handleError(error, url));
+  }
+
+  /* TODO: Implement this function */
+  public getRefactorings(project: Project): Observable<Refactoring[]> {
+    let url = this.BACKEND_SERVER + "?refactorings&projectID=" + project.getID();
+    let res = this.http.get(url)
+      .map(res => {
+        let returned = res.json();
+        let authorContacted = (refactoring, row) => {
+          refactoring.authorContacted = row["authorContacted"] == 1;
+        }
+        return this.getRefactoringsFromRow((refactoringRow) => project, returned, authorContacted);
+      })
+      .catch(error => this.handleError(error, url));
+    console.log(res);
+    return res;
+  }
+  
   private getProjectObjFromProjectRow(project: any): Project {
     /*private id: number, private cloneUrl: string, private status: string, 
         private numberOfLambdas: number, private lastAnalyzed: Date, private shouldMonitor: boolean,
@@ -141,7 +223,44 @@ export class BackEndService {
     }
   }
 
+  public skipRefactoring(lambda: Refactoring, skip: boolean) {
+    if (skip || (lambda.getStatus() === 'SKIPPED' && !skip)) {
+      let url = this.BACKEND_SERVER + "?skipLambda&lambdaID=" + lambda.getID() + "&skip=" + skip + this.getJwtUrlComponent();
+      return this.http.get(url)
+        .map(res => {
+          if (res.status) {
+            if (skip) {
+              lambda.setStatus('SKIPPED');
+            } else {
+              if (lambda.getStatus() == 'SKIPPED') {
+                lambda.setStatus('NEW');
+              }
+            }
+          }
+          return res.status;
+        })
+      .catch(error => this.handleError(error, url));
+    }
+  }
+
   public setTag(lambda: Lambda, tag: string, remove: boolean) {
+    let mode: string = remove ? "remove" : "add";
+    let url = this.BACKEND_SERVER + "?setTag&lambdaID=" + lambda.getID() + "&tag=" + encodeURIComponent(tag) + "&mode=" + mode + this.getJwtUrlComponent();
+    return this.http.get(url)
+      .map(res => {
+        if (res.status == 200) {
+          if (remove) {
+            lambda.removeTag(tag);
+          } else {
+            lambda.addTag(tag);
+          }
+        }
+        return res.status;
+      })
+      .catch(error => this.handleError(error, url));
+  }
+
+  public setRefactoringTag(lambda: Refactoring, tag: string, remove: boolean) {
     let mode: string = remove ? "remove" : "add";
     let url = this.BACKEND_SERVER + "?setTag&lambdaID=" + lambda.getID() + "&tag=" + encodeURIComponent(tag) + "&mode=" + mode + this.getJwtUrlComponent();
     return this.http.get(url)
@@ -236,6 +355,19 @@ export class BackEndService {
       .catch(error => this.handleError(error, url));
   }
 
+  public getEmailTemplateRefactoring(refactoring: Refactoring): Observable<string> {
+
+    let url = this.BACKEND_SERVER + "?getEmailTemplateRefactoring&refactoringID=" + encodeURIComponent(refactoring.getID().toString());
+
+    url += this.getJwtUrlComponent();
+
+    return this.http.get(url)
+      .map(res => {
+        return res.json()["template"];
+      })
+      .catch(error => this.handleError(error, url));
+  }
+
   public sendEmail(to: string, toEmail: string, body: string, subject: string, lambdaID: number, sendMyself: boolean): Observable<Response> {
     let url = this.BACKEND_SERVER + "?sendMail" +
       "&toEmail=" + encodeURIComponent(toEmail) +
@@ -281,6 +413,30 @@ export class BackEndService {
             emailRow["sender"],
             emailRow["recipientIsUser"] == "1",
             emailRow["subject"]);
+          emails.push(email);
+        }
+        return emails;
+      })
+      .catch(error => this.handleError(error, url));
+  }
+
+  public getRefactoringEmailChain(refactoring: Refactoring): Observable<Email[]> {
+    let url = this.BACKEND_SERVER + "?getMails&refactoringID=" + refactoring.getID() + this.getJwtUrlComponent();
+    return this.http.get(url)
+      .map(res => {
+        let emails: Email[] = [];
+        let returned = res.json();
+        for (let emailRow of returned) {
+          let email = new Email(null,
+            emailRow["id"],
+            emailRow["alternativeAddress"],
+            emailRow["recipient"],
+            emailRow["sentDate"],
+            emailRow["body"],
+            emailRow["sender"],
+            emailRow["recipientIsUser"] == "1",
+            emailRow["subject"],
+            refactoring);
           emails.push(email);
         }
         return emails;
