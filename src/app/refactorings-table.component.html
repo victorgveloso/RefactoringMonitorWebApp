@@ -1,0 +1,52 @@
+<div class="loading" *ngIf="(!refactoringsFetched)"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</div> 
+<div class="table-responsive" *ngIf="refactoringsFetched">
+    <div class="form-group">
+        <div class="form-check">
+            <label for="onlyNewLabel">
+                <input style="vertical-align: top" type="checkbox" class="btn" aria-label="..." id="onlyNewLabel" 
+                    name="onlyNewLabel" #onlyNewLabel (change)="changeShowOnlyNewRefactorings(onlyNewLabel.checked)" />
+                Show only new refactorings
+            </label>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th (click)="paginator.setSortBy('commit.id')">Commit</th>
+                <th (click)="paginator.setSortBy('commit.date')">Date</th>
+                <th (click)="paginator.setSortBy('commit.author')">Author</th>
+                <th>Refactoring Type</th>
+                <th (click)="paginator.setSortBy('status')">Status</th>
+                <th (click)="paginator.setSortBy('locationStatus')">Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let refactoring of refactoringsFiltered">
+                <td><a href="{{ refactoring.getCommitDiffLink() }}" target="_blank">{{ refactoring.getCommit().getSHA1().substring(0, 7) }}</a></td>
+                <td>{{ refactoring.getCommit().getDate() | date:'medium' }}</td>
+                <td>
+                    {{ refactoring.getCommit().getAuthor() }}
+                    <sup *ngIf="backendService.getUser() && refactoring.authorContacted"><i class="fa fa-envelope" aria-hidden="true" title="The developer has already been contacted"></i></sup>
+                </td>
+                <td>{{ refactoring.getRefactoringType() }}</td>
+                <td>NEW</td>
+                <!-- <td [class.newRefactoring]="refactoring.status === 'NEW'">{{ getPrettyStatus(refactoring.status) }}</td> -->
+                <!-- <td>{{ getPrettyStatus(refactoring.getLocationStatus()) }}</td> -->
+                <td>
+                    <!-- <refactoring-code [refactoring]="refactoring"></refactoring-code> -->
+                    <a href="{{ refactoring.getRefactoringLink() }}" target="_blank"><i class="fa fa-github" aria-hidden="true" title="See on GitHub"></i></a>
+                    <div *ngIf="false" class="actions">
+                        <a href="javascript:void(0)" (click)="skipRefactoring(refactoring, true)" *ngIf="backendService.getUser() && refactoring.status == 'NEW'" aria-label="Skip Refactoring Expression"><i
+                             class="fa fa-eye-slash" aria-hidden="true" title="Skip Refactoring Expression"></i></a>
+                        <a (click)="skipRefactoring(refactoring, false)" href="javascript:void(0)" *ngIf="backendService.getUser() && refactoring.status == 'SKIPPED'" aria-label="Unskip Refactoring Expression"><i
+                            class="fa fa-eye" aria-hidden="true" title="Unskip Refactoring Expression"></i></a>
+                            <!-- FIXME routerLink below should not depend on project or refactoring which are asynchronously loaded -->
+                        <!-- <a *ngIf="backendService.getUser() && refactoring" [routerLink]="['/refactoring', project.getID(), refactoring.id]" 
+                            routerLinkActive="active" title="Actions"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> -->
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot paginator [paginator]="paginator" [colspan]="6"></tfoot>
+    </table>
+</div>
