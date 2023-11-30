@@ -97,7 +97,7 @@ export class BackEndService {
       }
       let refactoringLocationStatus = row["refactoringLocationStatus"] ? row["refactoringLocationStatus"] : "";
       let refactoringStatus = row["refactoring_status"] ? row["refactoring_status"] : "";
-      let refactoring = new Refactoring(row["id"], commit, row["filePath"], row["startLine"], row["endLine"], 
+      let refactoring = new Refactoring(row["refactoringId"], commit, row["filePath"], row["startLine"], row["endLine"], 
         row["fileMd5"], row["body"], parameters, refactoringStatus, tags, refactoringLocationStatus, row["parent"], row["refactoringString"], row["refactoringType"]);
       if (mapExtraInfo) {
         mapExtraInfo(refactoring, row);
@@ -368,14 +368,16 @@ export class BackEndService {
       .catch(error => this.handleError(error, url));
   }
 
-  public sendEmail(to: string, toEmail: string, body: string, subject: string, lambdaID: number, sendMyself: boolean): Observable<Response> {
-    let url = this.BACKEND_SERVER + "?sendMail" +
+  public sendEmail(to: string, toEmail: string, body: string, subject: string, lambdaID: number, sendMyself: boolean, revision?: Number): Observable<Response> {
+    let rev = revision ? `&revision=${revision}` : "";
+    let url = this.BACKEND_SERVER + "?sendEmail" +
       "&toEmail=" + encodeURIComponent(toEmail) +
       "&body=" + encodeURIComponent(body) +
       "&subject=" + encodeURIComponent(subject) +
       "&to=" + encodeURIComponent(to) +
       "&lambda=" + lambdaID +
       "&emailMyself=" + sendMyself +
+      rev +
       this.getJwtUrlComponent();
 
     return this.http.get(url)

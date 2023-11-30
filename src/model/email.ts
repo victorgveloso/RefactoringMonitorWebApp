@@ -1,4 +1,5 @@
 import { Lambda } from './lambda';
+import { Refactoring } from './refactoring';
 
 export class Email {
     
@@ -10,7 +11,8 @@ export class Email {
         private body: string,
         private sender: string,
         private recipientIsUser: boolean,
-        private subject: string) {}
+        private subject: string,
+        private refactoring?: Refactoring) {}
 
     public getID() : number { return this.id; }
     public getAlternativeEmail() : string { return this.alternativeEmail; }
