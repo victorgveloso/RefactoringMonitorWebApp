@@ -176,7 +176,7 @@ export class RefactoringComponent {
   public refreshEmails() {
     this.backendService.getRefactoringEmailChain(this.refactoring).subscribe(
       emails => this.emails = emails,
-      error => console.log(<any>error)
+      console.error
     );
   }
 
@@ -196,7 +196,7 @@ export class RefactoringComponent {
                 emailTemplate => {
                   this.emailTemplate = emailTemplate;
                 },
-                error => console.log(<any>error)
+                console.error
               );
               this.refreshEmails();
                this.backendService.getEmailChainForEmail(this.commit.getAuthorEmail()).subscribe(
@@ -205,10 +205,10 @@ export class RefactoringComponent {
                     this.messageStatus = { "ok": false, "class": "alert-warning", "message": this.commit.getAuthor() + " has been already contacted!" };
                   }
                 },
-                error => console.log(<any>error)
+                console.error
               );
             },
-            error => console.log(<any>error));
+            console.error);
         }
       );
       this.backendService.getAllRefactoringTags().subscribe(
