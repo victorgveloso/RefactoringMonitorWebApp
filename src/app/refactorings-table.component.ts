@@ -4,6 +4,7 @@ import { Project } from '../model/project';
 import { PaginatorService } from './paginator.service';
 import { BackEndService } from './backend.service';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'refactorings-table-component',
@@ -18,7 +19,7 @@ export class RefactoringsTableComponent implements OnChanges {
   private refactoringsFiltered: Refactoring[];
   private refactoringsSubscription: Observable<Refactoring[]>;
 
-  constructor(private paginator: PaginatorService, private backendService: BackEndService) {
+  constructor(private paginator: PaginatorService, private backendService: BackEndService, private router: Router) {
     this.refactoringsFiltered = [];
   }
 
@@ -40,6 +41,18 @@ export class RefactoringsTableComponent implements OnChanges {
     } else {
       this.paginator.removeFilter("status");
     }
+  }
+
+  private navigateTo(refactoring: Refactoring) {
+    let projectID = this.project.getID();
+    let refactoringID = refactoring.getID();
+    if (!projectID || !refactoringID) {
+      console.error(projectID, refactoringID);
+      console.error(refactoring);
+      
+      return;
+    }
+    this.router.navigate(['/refactoring-details', projectID, refactoringID]);
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {

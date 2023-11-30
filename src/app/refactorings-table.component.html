@@ -35,14 +35,15 @@
                 <td>
                     <!-- <refactoring-code [refactoring]="refactoring"></refactoring-code> -->
                     <a href="{{ refactoring.getRefactoringLink() }}" target="_blank"><i class="fa fa-github" aria-hidden="true" title="See on GitHub"></i></a>
+                    <a *ngIf="backendService.getUser() && refactoring" [routerLink]="['/refactoring', project.getID(), refactoring.id]" 
+                            routerLinkActive="active" title="Actions"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                     <div *ngIf="false" class="actions">
                         <a href="javascript:void(0)" (click)="skipRefactoring(refactoring, true)" *ngIf="backendService.getUser() && refactoring.status == 'NEW'" aria-label="Skip Refactoring Expression"><i
                              class="fa fa-eye-slash" aria-hidden="true" title="Skip Refactoring Expression"></i></a>
                         <a (click)="skipRefactoring(refactoring, false)" href="javascript:void(0)" *ngIf="backendService.getUser() && refactoring.status == 'SKIPPED'" aria-label="Unskip Refactoring Expression"><i
                             class="fa fa-eye" aria-hidden="true" title="Unskip Refactoring Expression"></i></a>
                             <!-- FIXME routerLink below should not depend on project or refactoring which are asynchronously loaded -->
-                        <!-- <a *ngIf="backendService.getUser() && refactoring" [routerLink]="['/refactoring', project.getID(), refactoring.id]" 
-                            routerLinkActive="active" title="Actions"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> -->
+                        
                     </div>
                 </td>
             </tr>
