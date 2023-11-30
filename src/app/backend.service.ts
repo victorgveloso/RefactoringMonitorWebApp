@@ -470,6 +470,31 @@ export class BackEndService {
       .catch(error => this.handleError(error, url));
   }
 
+  public getRefactoringsEmailedFor(): Observable<any> {
+    let url = this.BACKEND_SERVER + "?emailedRefactorings" + this.getJwtUrlComponent();
+    return this.http.get(url)
+      .map(res => {
+        let returned = res.json();
+        let allTheRefactorings = [];
+        let mapExtraInfo = (refactoring, row) => {
+          refactoring["responded"] = row["responded"] == "1";
+          refactoring["tagged"] = row["tagged"] == "1";
+        };
+        let myRefactorings = this.getRefactoringsFromRow((refactoringRow) => this.getProjectObjFromProjectRow(refactoringRow["project"]), returned["ByMe"], mapExtraInfo);
+        let otherRefactorings = this.getRefactoringsFromRow((refactoringRow) => this.getProjectObjFromProjectRow(refactoringRow["project"]), returned["ByOthers"], mapExtraInfo);
+        myRefactorings.forEach(refactoring => {
+          refactoring["by"] = "Me";
+          allTheRefactorings.push(refactoring);
+        });
+        otherRefactorings.forEach(refactoring => {
+          refactoring["by"] = "Others";
+          allTheRefactorings.push(refactoring);
+        });
+        return allTheRefactorings;
+      })
+      .catch(error => this.handleError(error, url));
+  }
+
   public getLambdasEmailedFor(): Observable<any> {
     let url = this.BACKEND_SERVER + "?emailedLambdas" + this.getJwtUrlComponent();
     return this.http.get(url)

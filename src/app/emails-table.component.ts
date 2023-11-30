@@ -14,7 +14,8 @@ export class EmailsTableComponent {
   lambdasFiltered = [];
 
   constructor(private backendService: BackEndService, private paginator: PaginatorService) {
-    this.backendService.getLambdasEmailedFor().subscribe(
+    // this.backendService.getLambdasEmailedFor().subscribe(
+    this.backendService.getRefactoringsEmailedFor().subscribe(
       lambdas => {
         this.paginator.setObserver(sortedData => this.lambdasFiltered = sortedData);
         this.paginator.setPath('emails');
