@@ -27,6 +27,7 @@ import { BackEndService } from './backend.service';
 import { RefactoringsTableComponent } from './refactorings-table.component';
 import { RefactoringComponent } from './refactoring.component';
 import { RefactoringCodeComponent } from './refactoring-code.component';
+import { BasenamePipe } from "../utils/basename-pipe";
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { RefactoringCodeComponent } from './refactoring-code.component';
     SimpleTinyComponent,
     EmailsTableComponent,
     LambdaCodeComponent,
+    BasenamePipe,
     RefactoringCodeComponent
   ],
   imports: [

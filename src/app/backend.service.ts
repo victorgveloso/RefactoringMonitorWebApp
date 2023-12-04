@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import 'rxjs/Rx';
 import { Refactoring } from 'model/refactoring';
 import { RefactoringParameter } from 'model/refactoring-parameter';
+import { CodeRange } from '../model/code-range';
 
 @Injectable()
 export class BackEndService {
@@ -56,6 +57,27 @@ export class BackEndService {
       })
       .catch(error => this.handleError(error, url));
   }
+  public getCodeRanges(refactoringID: number) : Observable<CodeRange[]> {
+    let url = this.BACKEND_SERVER + "?coderanges&refactoringID=" + refactoringID;
+    return this.http.get(url)
+      .map(res => {
+        let returnedJson = res.json();
+        console.log(returnedJson);
+        return returnedJson.map((range) => new CodeRange(
+          range["filePath"],
+          range["startLine"],
+          range["endLine"],
+          range["startColumn"],
+          range["endColumn"],
+          range["codeElementType"],
+          range["description"],
+          range["codeElement"],
+          new Refactoring(range["refactoring"],new Commit(new Project(null, null, range["cloneUrl"], null, null, null, null, null, null, null, null, null), range["commitId"], null, null, null, null, null), null, range["startLine"], range["endLine"], 
+          null, null, [], null, [], null, null, range["refactoringDescription"], range["refactoringType"]),
+          range["diffSide"]))
+        })
+      .catch(error => this.handleError(error, url));
+  }
 
   /* TODO: Implement this function */
   public getRefactoring(refactoringID: number, project: Project): Observable<Refactoring> {
@@ -83,10 +105,6 @@ export class BackEndService {
         commits[commitRowID] = commit;
       }
       let parameters: RefactoringParameter[] = [];
-      // let parameterRows = row["parameters"];
-      // for (let j = 0; j < parameterRows.length; j++) {
-      //   parameters.push(new RefactoringParameter(parameterRows[j]["type"], parameterRows[j]["name"]));
-      // }
 
       let tags = [];
       let tagRows = row["tags"];
