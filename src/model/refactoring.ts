@@ -6,7 +6,7 @@ export class Refactoring {
     constructor(private id : number, private commit: Commit, private file, private startLine: number, private endLine: number,
         private fileMd5 : string,
         private body: string, private parameters: RefactoringParameter[], private status: string, private tags: string[],
-        private locationStatus: string, private parent: string, private refactoringString: string, private refactoringType?: string) {}
+        private locationStatus: string, private parent: string, private refactoringString: string, private refactoringType?: string, private isTestRefactoring: string = "0") {}
 
     public getID() : number { return this.id; }
     public getCommit() : Commit { return this.commit; }

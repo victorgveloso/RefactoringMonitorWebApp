@@ -8,6 +8,13 @@
                 Show only new refactorings
             </label>
         </div>
+        <div class="form-check">
+            <label for="onlyTestRefactorings">
+                <input style="vertical-align: top" type="checkbox" class="btn" aria-label="..." id="onlyTestRefactorings" 
+                    name="onlyTestRefactorings" #onlyTestRefactorings (change)="changeShowOnlyTestRefactorings(onlyTestRefactorings.checked)" />
+                Show only test refactorings
+            </label>
+        </div>
     </div>
     <table class="table table-striped">
         <thead>

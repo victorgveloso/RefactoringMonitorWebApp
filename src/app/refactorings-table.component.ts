@@ -35,6 +35,14 @@ export class RefactoringsTableComponent implements OnChanges {
       );
   }
 
+  private changeShowOnlyTestRefactorings(shouldShowOnlyTest: boolean) {
+    if (shouldShowOnlyTest) {
+      this.paginator.addFilter("isTestRefactoring", "1");
+    } else {
+      this.paginator.removeFilter("isTestRefactoring");
+    }
+  }
+
   private changeShowOnlyNewRefactorings(shouldShowOnlyNew: boolean) {
     if (shouldShowOnlyNew) {
       this.paginator.addFilter("status", "NEW");
