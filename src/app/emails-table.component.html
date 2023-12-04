@@ -1,12 +1,12 @@
-<div class="loading" *ngIf="!lambdasFiltered"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</div>
-<div class="table-responsive" *ngIf="lambdasFiltered">
+<div class="loading" *ngIf="!refactoringsFiltered"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</div>
+<div class="table-responsive" *ngIf="refactoringsFiltered">
     <table class="table table-striped">
         <thead>
             <tr>
                 <th></th>
                 <th (click)="paginator.setSortBy('commit.project.name')">Project</th>
                 <th>Commit</th>
-                <th (click)="paginator.setSortBy('locationStatus')">Lambda Location</th>
+                <th (click)="paginator.setSortBy('locationStatus')">Refactoring Type</th>
                 <th (click)="paginator.setSortBy('commit.date')">Commit Time</th>
                 <th (click)="paginator.setSortBy('by')">Am I involved?</th>
                 <th (click)="paginator.setSortBy('commit.author')">Receiver</th>
@@ -16,21 +16,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let lambda of lambdasFiltered; let i = index">
+            <tr *ngFor="let refactoring of refactoringsFiltered; let i = index">
                 <td>{{ i + 1 }}</td>
-                <td><a [routerLink]="['/project-details', lambda.getCommit().getProject().getID()]" 
-                            routerLinkActive="active" title="{{ lambda.getCommit().getProject().getName() }}">{{ lambda.getCommit().getProject().getName() }}</a></td>
-                <td><a href="{{ lambda.getCommitDiffLink() }}" target="_blank">{{ lambda.getCommit().getSHA1().substring(0, 7) }}</a></td>
-                <td>{{ getPrettyStatus(lambda.getLocationStatus()) }}</td>
-                <td>{{ lambda.getCommit().getDate() | date:'medium' }}</td>
-                <td><i *ngIf="lambda.by == 'Me'" class="fa fa-check" aria-hidden="true"></i></td>
-                <td>{{ lambda.getCommit().getAuthor() }}</td>
-                <td><i *ngIf="lambda.responded" class="fa fa-check" aria-hidden="true"></i></td>
-                <td><i *ngIf="lambda.tagged" class="fa fa-check" aria-hidden="true"></i></td>
+                <td><a [routerLink]="['/project-details', refactoring.getCommit().getProject().getID()]" 
+                            routerLinkActive="active" title="{{ refactoring.getCommit().getProject().getName() }}">{{ refactoring.getCommit().getProject().getName() }}</a></td>
+                <td><a href="{{ refactoring.getCommitDiffLink() }}" target="_blank">{{ refactoring.getCommit().getSHA1().substring(0, 7) }}</a></td>
+                <td title="{{ refactoring.getRefactoringString() }}">{{ refactoring.getRefactoringType() }}</td>
+                <td>{{ refactoring.getCommit().getDate() | date:'medium' }}</td>
+                <td><i *ngIf="refactoring.by == 'Me'" class="fa fa-check" aria-hidden="true"></i></td>
+                <td>{{ refactoring.getCommit().getAuthor() }}</td>
+                <td><i *ngIf="refactoring.responded" class="fa fa-check" aria-hidden="true"></i></td>
+                <td><i *ngIf="refactoring.tagged" class="fa fa-check" aria-hidden="true"></i></td>
                 <td>
                     <div class="actions">
-                        <a href="{{ lambda.getLambdaLink() }}" target="_blank"><i class="fa fa-github" aria-hidden="true" title="See on GitHub"></i></a>
-                        <a *ngIf="backendService.getUser()" [routerLink]="['/lambda', lambda.getCommit().getProject().getID(), lambda.id]" 
+                        <a href="{{ refactoring.getCommitDiffLink() }}" target="_blank"><i class="fa fa-github" aria-hidden="true" title="See on GitHub"></i></a>
+                        <a *ngIf="backendService.getUser()" [routerLink]="['/refactoring', refactoring.getCommit().getProject().getID(), refactoring.id]" 
                             routerLinkActive="active" title="Actions"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                     </div>
                 </td>

@@ -11,16 +11,16 @@ import { PaginatorService } from './paginator.service';
 })
 
 export class EmailsTableComponent {
-  lambdasFiltered = [];
+  refactoringsFiltered = [];
 
   constructor(private backendService: BackEndService, private paginator: PaginatorService) {
-    // this.backendService.getLambdasEmailedFor().subscribe(
+    // this.backendService.getrefactoringsEmailedFor().subscribe(
     this.backendService.getRefactoringsEmailedFor().subscribe(
-      lambdas => {
-        this.paginator.setObserver(sortedData => this.lambdasFiltered = sortedData);
+      refactorings => {
+        this.paginator.setObserver(sortedData => this.refactoringsFiltered = sortedData);
         this.paginator.setPath('emails');
-        this.paginator.setNumberOfItemsPerPage(lambdas.length);
-        this.paginator.setData(lambdas);
+        this.paginator.setNumberOfItemsPerPage(refactorings.length);
+        this.paginator.setData(refactorings);
       },
       error => console.log(<any>error));
   }
