@@ -386,8 +386,9 @@ export class BackEndService {
       .catch(error => this.handleError(error, url));
   }
 
-  public sendEmail(to: string, toEmail: string, body: string, subject: string, lambdaID: number, sendMyself: boolean, revision?: Number): Observable<Response> {
+  public sendEmail(to: string, toEmail: string, body: string, subject: string, lambdaID: number, sendMyself: boolean, revision?: Number, project?: Number): Observable<Response> {
     let rev = revision ? `&revision=${revision}` : "";
+    let proj = project ? `&project=${project}` : "";
     let url = this.BACKEND_SERVER + "?sendEmail" +
       "&toEmail=" + encodeURIComponent(toEmail) +
       "&body=" + encodeURIComponent(body) +
@@ -396,6 +397,7 @@ export class BackEndService {
       "&lambda=" + lambdaID +
       "&emailMyself=" + sendMyself +
       rev +
+      proj +
       this.getJwtUrlComponent();
 
     return this.http.get(url)

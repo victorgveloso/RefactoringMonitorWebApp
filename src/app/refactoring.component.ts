@@ -117,7 +117,7 @@ export class RefactoringComponent {
   }
 
   public sendEmail() {
-    this.backendService.sendEmail(this.commit.getAuthor(), this.commit.getAuthorEmail(), this.emailBody, this.emailSubject, this.refactoring.getID(), this.emailMyself,this.commit.getID())
+    this.backendService.sendEmail(this.commit.getAuthor(), this.commit.getAuthorEmail(), this.emailBody, this.emailSubject, this.refactoring.getID(), this.emailMyself,this.commit.getID(), this.commit.getProject().getID())
       .subscribe(
         res => this.handleEmailSentResponse(res),
         err => this.showMailSendError(err)
