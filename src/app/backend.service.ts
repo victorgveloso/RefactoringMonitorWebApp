@@ -114,7 +114,7 @@ export class BackEndService {
         }
       }
       let refactoringLocationStatus = row["refactoringLocationStatus"] ? row["refactoringLocationStatus"] : "";
-      let refactoringStatus = row["refactoring_status"] ? row["refactoring_status"] : "";
+      let refactoringStatus = row["status"] ? row["status"] : row["refactoring_status"] ? row["refactoring_status"] : "";
       let refactoring = new Refactoring(row["refactoringId"], commit, row["filePath"], row["startLine"], row["endLine"], 
         row["fileMd5"], row["body"], parameters, refactoringStatus, tags, refactoringLocationStatus, row["parent"], row["refactoringString"], row["refactoringType"], row["isTestRefactoring"]);
       if (mapExtraInfo) {

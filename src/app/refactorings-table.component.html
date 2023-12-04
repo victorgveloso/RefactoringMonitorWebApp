@@ -36,7 +36,7 @@
                     <sup *ngIf="backendService.getUser() && refactoring.authorContacted"><i class="fa fa-envelope" aria-hidden="true" title="The developer has already been contacted"></i></sup>
                 </td>
                 <td>{{ refactoring.getRefactoringType() }}</td>
-                <td>NEW</td>
+                <td>{{ refactoring.getStatus() }}</td>
                 <!-- <td [class.newRefactoring]="refactoring.status === 'NEW'">{{ getPrettyStatus(refactoring.status) }}</td> -->
                 <!-- <td>{{ getPrettyStatus(refactoring.getLocationStatus()) }}</td> -->
                 <td>
