@@ -17,7 +17,6 @@ import { ProjectDetailsComponent } from './project-details.component';
 import { LambdasTableComponent } from './lambdas-table.component';
 import { PaginatorComponent } from './paginator.component';
 import { LambdaComponent } from './lambda.component';
-import { EmailsComponent } from './emails.component';
 import { EmailsTableComponent } from './emails-table.component';
 import { LambdaCodeComponent } from './lambda-code.component';
 
@@ -44,7 +43,6 @@ import { RefactoringCodeComponent } from './refactoring-code.component';
     LambdaComponent,
     RefactoringComponent,
     SimpleTinyComponent,
-    EmailsComponent,
     EmailsTableComponent,
     LambdaCodeComponent,
     RefactoringCodeComponent
