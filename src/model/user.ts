@@ -9,6 +9,6 @@ export class User {
     public getEmail() { return this.email; }
     public getJWT() { return this.jwt; }
 
-    public isAdmin() { return this.role == "ADMIN"; }
+    public isAdmin() { return this.role.toUpperCase() == "ADMIN"; }
    
 }
