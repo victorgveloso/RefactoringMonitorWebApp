@@ -458,23 +458,40 @@ export class BackEndService {
   }
 
   public getRefactoringEmailChain(refactoring: Refactoring): Observable<Email[]> {
-    let url = this.BACKEND_SERVER + "?getMails&refactoringID=" + refactoring.getID() + this.getJwtUrlComponent();
+    let url = this.BACKEND_SERVER + "?getMails&refactoring=" + refactoring.getID() + this.getJwtUrlComponent();
     return this.http.get(url)
       .map(res => {
         let emails: Email[] = [];
+        
         let returned = res.json();
-        for (let emailRow of returned) {
-          let email = new Email(null,
-            emailRow["id"],
-            emailRow["alternativeAddress"],
-            emailRow["recipient"],
-            emailRow["sentDate"],
-            emailRow["body"],
-            emailRow["sender"],
-            emailRow["recipientIsUser"] == "1",
-            emailRow["subject"],
-            refactoring);
-          emails.push(email);
+        for (let i = 0; i < returned.length; i++) {
+            const emailRow = returned[i];
+            if (i === 0) {
+              let emailSent = new Email(null,
+                emailRow["id"],
+                emailRow["alternativeAddress"],
+                emailRow["recipient"],
+                emailRow["sentDate"],
+                emailRow["body"],
+                emailRow["sender"],
+                emailRow["recipientIsUser"] == "1",
+                emailRow["subject"],
+                refactoring);
+                emails.push(emailSent);
+            }
+            if (emailRow["responseId"] && emailRow["responseSentDate"] && emailRow["responseSubject"]) {
+              let emailReceived = new Email(null,
+                emailRow["responseId"],
+                "",
+                emailRow["sender"],
+                emailRow["responseSentDate"],
+                emailRow["bodyHtml"],
+                emailRow["recipient"],
+                true,
+                emailRow["responseSubject"],
+                refactoring);
+                emails.push(emailReceived);
+            }
         }
         return emails;
       })
