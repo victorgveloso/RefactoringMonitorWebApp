@@ -278,16 +278,16 @@ export class BackEndService {
       .catch(error => this.handleError(error, url));
   }
 
-  public setRefactoringTag(lambda: Refactoring, tag: string, remove: boolean) {
+  public setRefactoringTag(refactoring: Refactoring, tag: string, remove: boolean) {
     let mode: string = remove ? "remove" : "add";
-    let url = this.BACKEND_SERVER + "?setTag&lambdaID=" + lambda.getID() + "&tag=" + encodeURIComponent(tag) + "&mode=" + mode + this.getJwtUrlComponent();
+    let url = this.BACKEND_SERVER + "?setTag&refactoring=" + refactoring.getID() + "&tag=" + encodeURIComponent(tag) + "&mode=" + mode + this.getJwtUrlComponent();
     return this.http.get(url)
       .map(res => {
         if (res.status == 200) {
           if (remove) {
-            lambda.removeTag(tag);
+            refactoring.removeTag(tag);
           } else {
-            lambda.addTag(tag);
+            refactoring.addTag(tag);
           }
         }
         return res.status;
