@@ -96,7 +96,7 @@ export class RefactoringComponent {
   }
 
   public addResponse() {
-    this.backendService.addAuthorEmail(this.commit.getAuthorEmail(), this.emailBody, this.emailSubject, this.refactoring.getID())
+    this.backendService.addAuthorEmailForRefactoring(this.commit.getAuthorEmail(), this.emailBody, this.emailSubject, this.refactoring.getID(), this.commit.getID())
       .subscribe(
         res => this.handleEmailResponseAdded(res),
         err => this.handleEmailResponseAddedError(err)

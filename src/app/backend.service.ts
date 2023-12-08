@@ -405,6 +405,21 @@ export class BackEndService {
       .catch(error => this.handleError(error, url));
   }
 
+  public addAuthorEmailForRefactoring(fromEmail: string, body: string, subject: string, refactoringID: number, revisionID: number): Observable<Response> {
+    let user = this.getUser();
+    let url = this.BACKEND_SERVER + "?addRefactoringResponse" +
+      "&revision=" + revisionID +
+      "&body=" + encodeURIComponent(body) +
+      "&subject=" + encodeURIComponent(subject) +
+      "&fromEmail=" + encodeURIComponent(fromEmail) +
+      "&refactoring=" + refactoringID +
+      this.getJwtUrlComponent();
+
+    return this.http.get(url)
+      .map(res => res)
+      .catch(error => this.handleError(error, url));
+  }
+
   public addAuthorEmail(fromEmail: string, body: string, subject: string, lambdaID: number): Observable<Response> {
     let user = this.getUser();
     let url = this.BACKEND_SERVER + "?addResponse" +
