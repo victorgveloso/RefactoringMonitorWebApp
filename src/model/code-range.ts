@@ -12,10 +12,14 @@ export class CodeRange {
         public readonly description: string,
         public readonly codeElement: string,
         public readonly refactoring: Refactoring,
-        public readonly diffSide: DiffSide
+        public readonly diffSide: DiffSide,
+        public readonly refactoringLink?: string
     ) {}
 
     public getRefactoringLink() : string {
+        if (this.refactoringLink) {
+            return this.refactoringLink;
+        }
         let commit = this.refactoring.getCommit();
         let gh = commit.getProject().getCloneUrl().replace(".git", "");
         return gh + "/blob/" + commit.getID() + "/" + this.filePath + "#L" + this.startLine + "-L" + this.endLine;

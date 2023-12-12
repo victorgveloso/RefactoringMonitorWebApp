@@ -57,8 +57,8 @@ export class BackEndService {
       })
       .catch(error => this.handleError(error, url));
   }
-  public getCodeRanges(refactoringID: number) : Observable<CodeRange[]> {
-    let url = this.BACKEND_SERVER + "?coderanges&refactoringID=" + refactoringID;
+  public getCodeRanges(refactoring: Refactoring) : Observable<CodeRange[]> {
+    let url = this.BACKEND_SERVER + "?coderanges&refactoringID=" + refactoring.getID();
     return this.http.get(url)
       .map(res => {
         let returnedJson = res.json();
@@ -72,10 +72,11 @@ export class BackEndService {
           range["codeElementType"],
           range["description"],
           range["codeElement"],
-          new Refactoring(range["refactoring"],new Commit(new Project(null, null, range["cloneUrl"], null, null, null, null, null, null, null, null, null), range["commitId"], null, null, null, null, null), null, range["startLine"], range["endLine"], 
-          null, null, [], null, [], null, null, range["refactoringDescription"], range["refactoringType"]),
-          range["diffSide"]))
-        })
+          refactoring,
+          range["diffSide"],
+          range["refactoringLink"])
+          )
+      })
       .catch(error => this.handleError(error, url));
   }
 
@@ -101,7 +102,7 @@ export class BackEndService {
       let commitRowID: number = parseInt(row["commitRowId"]);
       let commit: Commit = commits[commitRowID];
       if (typeof commit === "undefined") {
-        commit = new Commit(getProjectFunc(row), commitRowID, row["commitId"], new Date(row["commitTime"].replace(/-/g, "/")), row["authorName"], row["authorEmail"], +row["authorRank"]);
+        commit = new Commit(getProjectFunc(row), commitRowID, row["commitId"], new Date(row["commitTime"].replace(/-/g, "/")), row["authorName"], row["authorEmail"], +row["authorRank"], row["FullMessage"]);
         commits[commitRowID] = commit;
       }
       let parameters: RefactoringParameter[] = [];
@@ -193,7 +194,7 @@ export class BackEndService {
       let commitRowID: number = +row["commitRowID"];
       let commit: Commit = commits[commitRowID];
       if (typeof commit === "undefined") {
-        commit = new Commit(getProjectFunc(row), commitRowID, row["commitSHA1"], new Date(row["commitTime"].replace(/-/g, "/")), row["authorName"], row["authorEmail"], +row["authorRank"]);
+        commit = new Commit(getProjectFunc(row), commitRowID, row["commitSHA1"], new Date(row["commitTime"].replace(/-/g, "/")), row["authorName"], row["authorEmail"], +row["authorRank"], "");
         commits[commitRowID] = commit;
       }
       let parameters: LambdaParameter[] = [];

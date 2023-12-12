@@ -6,8 +6,12 @@ import { BackEndService } from './backend.service';
 @Component({
   selector: 'refactoring-code',
   templateUrl: './refactoring-code.component.html',
-  styles: ["code { padding: 3px 0; }", ".refactoring { background-color: #ffeded }"]
-})
+  styles: ["code { padding: 3px 0; }", 
+          ".refactoring { background-color: #ffeded }",
+          ".flex-column { display: flex; flex-direction: column; }",
+          ".vertical-center { align-items: center; }",
+          ".text-center { text-align: center; }",
+          ".block { display: block; }"]})
 export class RefactoringCodeComponent {
 
   @Input() refactoring: Refactoring;
@@ -20,7 +24,7 @@ export class RefactoringCodeComponent {
   }
 
   public getCodeRanges() {
-    this.backendService.getCodeRanges(this.refactoring.getID()).subscribe(
+    this.backendService.getCodeRanges(this.refactoring).subscribe(
       codeRanges => {
         console.log(codeRanges);
         this.codeRanges = [...this.codeRanges, ...codeRanges];
