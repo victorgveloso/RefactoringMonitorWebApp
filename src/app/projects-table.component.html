@@ -1,4 +1,4 @@
-<div class="loading" *ngIf="!projectsFiltered"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</div>
+<div class="loading" *ngIf="!projectsFiltered"><i class="fa-solid fa-rotate-right fa-spin"></i> Loading...</div>
 <div class="table-responsive" *ngIf="projectsFiltered">
     <table class="table table-striped">
         <thead>
@@ -21,7 +21,7 @@
                 <td>
                     <input type="checkbox" *ngIf="backEndService.getUser() && backEndService.getUser().isAdmin()" 
                         (change)="changeMonitor(p.id, $event)" checked="{{ p.shouldMonitor ? 'checked' : '' }}" />
-                    <i *ngIf="!(backEndService.getUser() && backEndService.getUser().isAdmin()) && p.shouldMonitor"  class="fa fa-check" aria-hidden="true"></i>
+                    <i *ngIf="!(backEndService.getUser() && backEndService.getUser().isAdmin()) && p.shouldMonitor"  class="fa-solid fa-check" aria-hidden="true"></i>
                 </td>
                 <td>{{ p.lastAnalyzed | date:'medium' }}</td>
                 <td>{{ p.commits_count }}</td>               

@@ -1,26 +1,26 @@
 <div *ngIf="lambda">
     <h1>
-        <i class="fa fa-github" aria-hidden="true"></i>
+        <i class="fa-brands fa-github" aria-hidden="true"></i>
         <a href="{{ project.getCloneUrl() }}" target="_blank">{{ project.getName() }}</a>
     </h1>
     <p>
         <a href="{{ lambda.getCommitDiffLink() }}" target="_blank">{{ commit.getSHA1() }}</a> |
-        <i class="fa fa-calendar" aria-hidden="true"></i> {{ commit.getDate() }} |
-        <i class="fa fa-user" aria-hidden="true"></i> {{ commit.getAuthor() }}
+        <i class="fa-solid fa-calendar" aria-hidden="true"></i> {{ commit.getDate() }} |
+        <i class="fa-solid fa-user" aria-hidden="true"></i> {{ commit.getAuthor() }}
     </p>
     <p *ngIf="lambda.status">
-        <i class="fa fa-tasks" aria-hidden="true"></i> Status: {{ lambda.status }}
+        <i class="fa-solid fa-tasks" aria-hidden="true"></i> Status: {{ lambda.status }}
         <button type="button" class="btn btn-default btn-sm" (click)="skipLambda()" *ngIf="lambda.status == 'NEW'" aria-label="Skip Lambda Expression">
-            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+            <i class="fa-solid fa-eye-slash" aria-hidden="true"></i>
         </button>
         <button type="button" class="btn btn-default btn-sm" (click)="unskipLambda()" *ngIf="lambda.status != 'NEW'" aria-label="Unskip Lambda Expression">
-            <i class="fa fa-eye" aria-hidden="true"></i>
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
         </button>
     </p>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                <i class="fa fa-file-code-o" aria-hidden="true"></i> <a href="{{ lambda.getLambdaLink() }}" target="_blank">{{ lambda.getFile() }}</a>
+                <i class="fa-regular fa-file-code" aria-hidden="true"></i> <a href="{{ lambda.getLambdaLink() }}" target="_blank">{{ lambda.getFile() }}</a>
             </h3>
         </div>
         <div class="panel-body">
@@ -30,7 +30,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                <i class="fa fa-tags" aria-hidden="true"></i> Associated Tags
+                <i class="fa-solid fa-tags" aria-hidden="true"></i> Associated Tags
             </h3>
         </div>
         <div class="panel-body">
@@ -42,7 +42,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                <i class="fa fa-comments-o" aria-hidden="true"></i>
+                <i class="fa-regular fa-comments" aria-hidden="true"></i>
                 Communication with {{ commit.getAuthor() }}
                 &lt;{{ commit.getAuthorEmail().replace("@", " under the domain ") }}&gt;
             </h3>
@@ -52,8 +52,8 @@
                 <hr />
                 <div class="media-left">
                     <a *ngIf="email.getRecipientIsUser()"
-                        href="mailto://{{ lambda.getCommit().getAuthorEmail() }}"><i class="fa fa-user" aria-hidden="true"></i></a>
-                    <i *ngIf="!email.getRecipientIsUser()" class="fa fa-user-secret" aria-hidden="true"></i>
+                        href="mailto://{{ lambda.getCommit().getAuthorEmail() }}"><i class="fa-solid fa-user" aria-hidden="true"></i></a>
+                    <i *ngIf="!email.getRecipientIsUser()" class="fa-solid fa-user-secret" aria-hidden="true"></i>
                 </div>
                 <div class="media-body">
                     <div class="media-heading">
@@ -65,7 +65,7 @@
                     <div class="well" [innerHTML]="email.getBody()"></div>
                     <div class="btn-group" role="group" aria-label="..." *ngIf="email.getRecipientIsUser()">
                         <button type="button" class="btn btn-default btn-success" (click)="initiateReplyEmail(email)">
-                            <i class="fa fa-reply" aria-hidden="true"></i> Reply
+                            <i class="fa-solid fa-reply" aria-hidden="true"></i> Reply
                         </button>
                     </div>
                 </div>
@@ -79,13 +79,13 @@
             </div>
             <div class="btn-group" role="group" aria-label="...">
                 <button type="button" class="btn btn-default" (click)="initiateTemplateEmail()" aria-label="Email the author">
-                    <i class="fa fa-envelope" aria-hidden="true"></i> Email {{ commit.getAuthor() }} (template)
+                    <i class="fa-regular fa-envelope" aria-hidden="true"></i> Email {{ commit.getAuthor() }} (template)
                 </button>
                 <button type="button" class="btn btn-default" (click)="initiateBlankEmail()" aria-label="Initiate email with author">
-                    <i class="fa fa-envelope-o" aria-hidden="true"></i> Email {{ commit.getAuthor() }}
+                    <i class="fa-regular fa-envelope-o" aria-hidden="true"></i> Email {{ commit.getAuthor() }}
                 </button>
                 <button type="button" class="btn btn-default" (click)="initiateAddResponse()" aria-label="Add response">
-                    <i class="fa fa-reply" aria-hidden="true"></i> Add author's response
+                    <i class="fa-solid fa-reply" aria-hidden="true"></i> Add author's response
                 </button>
             </div>
             <hr />
@@ -115,13 +115,13 @@
                     </div>
                     <div class="form-group">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button type="submit" class="btn btn-default btn-success" (click)="action()"><i class="fa fa-paper-plane" aria-hidden="true"></i> OK</button>
-                            <button type="button" class="btn btn-default btn-danger" (click)="hideEmailBlock()"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                            <button type="submit" class="btn btn-default btn-success" (click)="action()"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> OK</button>
+                            <button type="button" class="btn btn-default btn-danger" (click)="hideEmailBlock()"><i class="fa-solid fa-ban" aria-hidden="true"></i> Cancel</button>
                         </div>
                     </div>
                 </form>
             </div>
-            <!--i class="fa fa-reply-all" aria-hidden="true"></i> Replies -->
+            <!--i class="fa-solid fa-reply-all" aria-hidden="true"></i> Replies -->
         </div>
     </div>
 
