@@ -33,7 +33,7 @@
                 <td>{{ refactoring.getCommit().getDate() | date:'medium' }}</td>
                 <td>
                     {{ refactoring.getCommit().getAuthor() }}
-                    <sup *ngIf="backendService.getUser() && refactoring.authorContacted"><i class="fa fa-envelope" aria-hidden="true" title="The developer has already been contacted"></i></sup>
+                    <sup *ngIf="backendService.getUser() && (refactoring.status === 'AUTHOR_CONTACTED' || refactoring.status === 'EMAIL_SENT')"><i class="fa-regular fa-envelope" aria-hidden="true" title="The developer has already been contacted"></i></sup>
                 </td>
                 <td>{{ refactoring.getRefactoringType() }}</td>
                 <td>{{ refactoring.getStatus() }}</td>
