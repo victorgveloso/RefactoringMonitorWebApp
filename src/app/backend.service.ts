@@ -375,8 +375,8 @@ export class BackEndService {
   }
 
   public getEmailTemplateRefactoring(refactoring: Refactoring): Observable<string> {
-
-    let url = this.BACKEND_SERVER + "?getEmailTemplateRefactoring&refactoringID=" + encodeURIComponent(refactoring.getID().toString());
+    let filePath = refactoring.getFile() ? "&filePath=" + encodeURIComponent(refactoring.getFile()) : "";
+    let url = this.BACKEND_SERVER + "?getEmailTemplateRefactoring&refactoringID=" + encodeURIComponent(refactoring.getID().toString()) + filePath;
 
     url += this.getJwtUrlComponent();
 
