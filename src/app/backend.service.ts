@@ -279,7 +279,15 @@ export class BackEndService {
       .catch(error => this.handleError(error, url));
   }
 
-  public setRefactoringTag(refactoring: Refactoring, tag: string, remove: boolean) {
+  public addTag(refactoring: Refactoring, tag: string) {
+    return this.setRefactoringTag(refactoring, tag, false);
+  }
+
+  public removeTag(refactoring: Refactoring, tag: string) {
+    return this.setRefactoringTag(refactoring, tag, true);
+  }
+
+  private setRefactoringTag(refactoring: Refactoring, tag: string, remove: boolean) {
     let mode: string = remove ? "remove" : "add";
     let url = this.BACKEND_SERVER + "?setTag&refactoring=" + refactoring.getID() + "&tag=" + encodeURIComponent(tag) + "&mode=" + mode + this.getJwtUrlComponent();
     return this.http.get(url)

@@ -50,12 +50,12 @@ export class RefactoringComponent {
   }
 
   public tagAdded(tag) {
-    this.backendService.setRefactoringTag(this.refactoring, tag, false)
+    this.backendService.addTag(this.refactoring, tag)
       .subscribe(res => { });
   }
 
   public tagRemoved(tag) {
-    this.backendService.setRefactoringTag(this.refactoring, tag, true)
+    this.backendService.removeTag(this.refactoring, tag)
       .subscribe(res => { });
   }
 
