@@ -5,6 +5,7 @@ import { PaginatorService } from './paginator.service';
 import { BackEndService } from './backend.service';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
+import { PaginatedBackendService } from './paginated-backend.service';
 
 @Component({
   selector: 'refactorings-table-component',
@@ -12,14 +13,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./refactorings-table.component.css'],
   providers: [PaginatorService]
 })
-export class RefactoringsTableComponent implements OnChanges {
+export class RefactoringsTableComponent {
   @Input() project: Project;
   private sub: any;
   private refactoringsFetched: boolean = false;
   private refactoringsFiltered: Refactoring[];
-  private refactoringsSubscription: Observable<Refactoring[]>;
 
-  constructor(private paginator: PaginatorService, private backendService: BackEndService, private router: Router) {
+  constructor(private paginator: PaginatedBackendService, private backendService: BackEndService, private router: Router) {
     this.refactoringsFiltered = [];
   }
 
@@ -63,30 +63,19 @@ export class RefactoringsTableComponent implements OnChanges {
     this.router.navigate(['/refactoring-details', projectID, refactoringID]);
   }
 
-  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-    for (let propName in changes) {
-      if (propName == "project") {
-        let changedProp = changes[propName];
-        this.project = changedProp.currentValue;
-        if (this.project) {
-          this.refactoringsSubscription = this.backendService.getRefactorings(this.project);
-          this.sub = this.refactoringsSubscription
-            .subscribe(refactorings => {
-              this.paginator.setObserver(sortedData => {
-                if (sortedData && sortedData.length > 0) {
-                  this.refactoringsFiltered = sortedData;
-                }
-              });
-              this.paginator.setPath('project-details/' + this.project.getID());
-              this.paginator.setData(refactorings);
-              this.paginator.apply();
-            }, 
-            error => console.log(<any>error),
-            () => {
-              this.refactoringsFetched = true;
-            });
+  ngOnInit() {
+    if (this.project) {
+      this.paginator.getRefactorings(this.project);
+      this.paginator.setObservers(sortedData => {
+        if (sortedData && sortedData.length > 0) {
+          this.refactoringsFiltered = sortedData;
+          this.refactoringsFetched = true;
         }
-      }
+      }, () => {
+        this.refactoringsFetched = false;
+      });
+      this.paginator.setPath('project-details/' + this.project.getID());
+      this.paginator.apply();
     }
   }
 

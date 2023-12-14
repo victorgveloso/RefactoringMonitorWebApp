@@ -16,10 +16,10 @@ import { CodeRange } from '../model/code-range';
 @Injectable()
 export class BackEndService {
 
-  private readonly BACKEND_SERVER: string = "http://php/api.php";
+  public readonly BACKEND_SERVER: string = "http://php/api.php";
   //private readonly BACKEND_SERVER: string = "http://localhost/RefactoringMinerBackEnd/api.php";
 
-  constructor(private http: Http, private router: Router) { }
+  constructor(protected http: Http, protected router: Router) { }
 
   public getProjects(): Observable<Project[]> {
     let url = this.BACKEND_SERVER + "?projects";
@@ -156,7 +156,7 @@ export class BackEndService {
     return res;
   }
   
-  private getProjectObjFromProjectRow(project: any): Project {
+  public getProjectObjFromProjectRow(project: any): Project {
     /*private id: number, private cloneUrl: string, private status: string, 
         private numberOfLambdas: number, private lastAnalyzed: Date, private shouldMonitor: boolean,
         private analyzed: boolean, private branch: string, private numberOfNewLambdas: number*/
@@ -587,7 +587,7 @@ export class BackEndService {
     return options;
   }
 
-  private handleError(error: Response | any, url: string) {
+  public handleError(error: Response | any, url: string) {
     // In a real world app, we might use a remote logging infrastructure
     let errMsg: string = url + "\n";
     if (error instanceof Response) {

@@ -28,6 +28,7 @@ import { RefactoringsTableComponent } from './refactorings-table.component';
 import { RefactoringComponent } from './refactoring.component';
 import { RefactoringCodeComponent } from './refactoring-code.component';
 import { BasenamePipe } from "../utils/basename-pipe";
+import { PaginatedBackendService } from './paginated-backend.service';
 
 
 @NgModule({
@@ -56,7 +57,7 @@ import { BasenamePipe } from "../utils/basename-pipe";
     routing,
     RlTagInputModule
   ],
-  providers: [AuthGuard, BackEndService],
+  providers: [AuthGuard, BackEndService, PaginatedBackendService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

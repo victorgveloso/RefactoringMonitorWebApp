@@ -7,18 +7,19 @@ export class PaginatorService {
   public static readonly ASC = 'asc';
   public static readonly DSC = 'dsc';
 
-  private numberOfItemsPerPage: number;
-  private currentPage: number = 1;
-  private sortBy: string = '';
-  private sortDir: string = PaginatorService.ASC;
-  private pages: number[];
-  private data: any[];
-  private observer: any;
-  private sub: any;
-  private path: string;
-  private filters: Object;
+  protected numberOfItemsPerPage: number;
+  protected currentPage: number = 1;
+  protected sortBy: string = '';
+  protected sortDir: string = PaginatorService.ASC;
+  protected pages: number[];
+  protected data: any[];
+  protected observer: any;
+  protected sub: any;
+  protected path: string;
+  protected filters: Object;
+  
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router) {
 
     this.sub = this.activatedRoute.queryParams.subscribe(params => {
       this.sortBy = (params['sort'] || '');
@@ -38,7 +39,6 @@ export class PaginatorService {
           }
         }
       }
-      this.apply();
     });
 
   }
@@ -53,14 +53,13 @@ export class PaginatorService {
 
   public setData(data: any[]) {
     this.data = data;
-    this.apply();
   }
 
   public setPath(path) {
     this.path = path;
   }
 
-  private route() {
+  protected route() {
     this.router.navigate([this.path], { queryParams: this.getParams() });
   }
 
@@ -147,7 +146,7 @@ export class PaginatorService {
     }
   }
 
-  private getSortField(data: any): any {
+  protected getSortField(data: any): any {
     let sortByParts = this.sortBy.split(".");
     let toReturn: any = null;
     for (let i = 0; i < sortByParts.length; i++) {
